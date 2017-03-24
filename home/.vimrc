@@ -60,7 +60,11 @@ Plugin 'fatih/vim-go'
 Plugin 'alvan/vim-closetag'
 Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plugin 'junegunn/fzf.vim'
-"Plugin 'jremmen/vim-ripgrep'
+Plugin 'roman/golden-ratio'
+Plugin 'tmhedberg/matchit'
+Plugin 'chriskempson/base16-vim'
+Plugin 'tpope/vim-obsession'
+
 " All of your Plugins must be added before the following line
 call vundle#end()
 
@@ -80,13 +84,15 @@ nnoremap <leader>b :AV<CR>
 autocmd BufWritePre * StripWhitespace
 
 "testing
-let g:turbux_command_prefix = 'bundle exec'
-
-" Turbux
-let g:no_turbux_mappings = 1
+let g:turbux_command_prefix = 'DISABLE_DATABASE_ENVIRONMENT_CHECK=1 bundle exec'
+let g:turbux_runner  = 'vimux'
+map <Leader>qq :VimuxCloseRunner<CR>
 " hack to fix broken 'run focused test' since
 " https://github.com/jgdavey/vim-turbux/pull/36
 let g:turbux_test_type = ''
+
+"open a console pan
+map <Leader>d :VimuxPromptCommand("dev c ")<CR><CR>
 
 "start fuzzy finder
 map <leader>f :Files<CR>
@@ -100,6 +106,7 @@ vnoremap K :m '<-2<CR>gv=gv
 "ctags
 nnoremap <leader>. <C-]>
 
+nnoremap ' "
 "gitgutter
 nmap <leader>] <Plug>GitGutterNextHunk
 nmap <leader>[ <Plug>GitGutterPrevHunk
@@ -108,14 +115,19 @@ nmap <Leader>h <Plug>GitGutterStageHunk
 nmap <Leader>hh <Plug>GitGutterUndoHunk
 
 "colourscheme
-set t_Co=256
-let g:solarized_termcolors=256
+"set t_Co=256
+let base16colorspace=256  " Access colors present in 256 colorspace
+"let g:solarized_termcolors=256
 syntax enable
-set background=dark
+"set background=dark
 let g:solarized_visibility = "high"
 let g:solarized_contrast = "high"
-colorscheme solarized
+colorscheme base16-atelier-plateau
 let g:airline_powerline_fonts = 1
+if filereadable(expand("~/.vimrc_background"))
+  let base16colorspace=256
+  source ~/.vimrc_background
+endif
 
 "toggle nerdtree
 map <leader>n :NERDTreeToggle<CR>
@@ -140,13 +152,13 @@ command! -bang -nargs=* Find call fzf#vim#grep('rg --line-number --fixed-strings
 
 
 imap <c-x><c-l> <plug>(fzf-complete-line)
-
 " Better command history with q:
 command! CmdHist call fzf#vim#command_history()
 nnoremap <leader>fh :CmdHist<CR>
 
 " Better search history
-nnoremap <leader>ff :History<CR>
+command! FileHist call fzf#vim#history()
+nnoremap <leader>ff :FileHist<CR>
 
 "source vim file
 nnoremap <leader>sv :source $MYVIMRC<cr>
