@@ -1,11 +1,10 @@
 let mapleader = " "
 
+set encoding=utf-8
+
 autocmd!
 set nocompatible
 
-filetype off
-filetype plugin on
-filetype indent on
 set nobackup
 set nowritebackup
 set noswapfile
@@ -26,115 +25,124 @@ autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
 autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
 autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
 
-au BufWritePost .vimrc so $MYVIMRC
+call plug#begin('~/.vim/plugged')
+Plug 'airblade/vim-gitgutter'
+Plug 'chriskempson/base16-vim'
+Plug 'tpope/vim-fugitive'
+Plug 'scrooloose/nerdtree'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'danro/rename.vim'
+Plug 'chiel92/vim-autoformat'
+Plug 'w0rp/ale'
+Plug 'roman/golden-ratio'
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'tpope/vim-rails'
+Plug 'benmills/vimux'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'ervandew/supertab'
+Plug 'ianks/vim-tsx'
+Plug 'pangloss/vim-javascript'
+Plug 'maxmellon/vim-jsx-pretty'
+Plug 'jparise/vim-graphql'
+Plug 'derekwyatt/vim-scala'
+Plug 'jremmen/vim-ripgrep'
+Plug 'leafgarland/typescript-vim'
+Plug 'janko/vim-test'
+Plug 'pgr0ss/vimux-ruby-test'
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-set rtp+=/usr/local/opt/fzf
-call vundle#begin()
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-rails'
-Plugin 'vim-ruby/vim-ruby'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/syntastic'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'edkolev/tmuxline.vim'
-Plugin 'KurtPreston/vim-autoformat-rails'
-Plugin 'ervandew/supertab'
-Plugin 'thoughtbot/vim-rspec'
-Plugin 'tpope/vim-rbenv'
-Plugin 'benmills/vimux'
-Plugin 'jgdavey/vim-turbux'
-Plugin 'ntpeters/vim-better-whitespace'
-Plugin 'yegappan/mru'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'fatih/vim-go'
-Plugin 'alvan/vim-closetag'
-Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plugin 'junegunn/fzf.vim'
-Plugin 'roman/golden-ratio'
-Plugin 'tmhedberg/matchit'
-Plugin 'chriskempson/base16-vim'
-Plugin 'tpope/vim-obsession'
+call plug#end()
 
-" All of your Plugins must be added before the following line
-call vundle#end()
+"gitgutter
+let g:gitgutter_log=1
+let g:gitgutter_override_sign_column_highlight = 0
+highlight clear SignColumn
+highlight GitGutterAdd    guifg=#009900 ctermfg=2
+highlight GitGutterChange guifg=#bbbb00 ctermfg=3
+highlight GitGutterDelete guifg=#ff2222 ctermfg=1
 
+autocmd BufNewFile,BufRead *.ts setlocal filetype=typescript
+
+highlight LineNr guibg=NONE
+
+"testing config
 let test#strategy = "vimux"
+let g:vimux_ruby_cmd_unit_test = "dev test"
+let g:vimux_ruby_file_relative_paths = 1
+let g:vimux_ruby_cmd_all_tests = "dev test"
+
+"testing commands
+nmap <leader>T :RunRubyFocusedTest<CR>
+nmap <leader>t :RunAllRubyTests<CR>
+nmap <leader>tt :TestLast<CR>
+map <Leader>qq :VimuxCloseRunner<CR>
+
+
+"open a console pan
+map <Leader>d :VimuxPromptCommand("")<CR><CR>
+
+"key word search
+nnoremap <leader>a :Find
+nnoremap <leader>z :Find <C-R><C-W><CR>
+nnoremap <leader>zz / <C-R><C-W><CR>
+"open related file in vertical split
+nnoremap <leader>b :AV<CR>
+nnoremap <leader>b :AV<CR>
 
 "Stop hightling search words
 nnoremap <leader><space> :nohlsearch<CR>
 
-"key word search
-nnoremap <leader>a :Find
-noremap <leader>z :grep <cword> *<CR>
-nnoremap <leader>ar  :Ag! G ".*.rb"'
-"open related file in vertical split
-nnoremap <leader>b :AV<CR>
-
 "remove trailing whitespace on save
 autocmd BufWritePre * StripWhitespace
 
-"testing
-let g:turbux_command_prefix = 'DISABLE_DATABASE_ENVIRONMENT_CHECK=1 bundle exec'
-let g:turbux_runner  = 'vimux'
-map <Leader>qq :VimuxCloseRunner<CR>
-" hack to fix broken 'run focused test' since
-" https://github.com/jgdavey/vim-turbux/pull/36
-let g:turbux_test_type = ''
-
-"open a console pan
-map <Leader>d :VimuxPromptCommand("dev c ")<CR><CR>
-
-"start fuzzy finder
-map <leader>f :Files<CR>
-
-"moving lines
-nnoremap J :m .+1<CR>==
-nnoremap K :m .-2<CR>==
-vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '<-2<CR>gv=gv
-
-"ctags
-nnoremap <leader>. <C-]>
-
-nnoremap ' "
-"gitgutter
-nmap <leader>] <Plug>GitGutterNextHunk
-nmap <leader>[ <Plug>GitGutterPrevHunk
-
-nmap <Leader>h <Plug>GitGutterStageHunk
-nmap <Leader>hh <Plug>GitGutterUndoHunk
-
-"colourscheme
-"set t_Co=256
-let base16colorspace=256  " Access colors present in 256 colorspace
-"let g:solarized_termcolors=256
-syntax enable
-"set background=dark
-let g:solarized_visibility = "high"
-let g:solarized_contrast = "high"
-colorscheme base16-atelier-plateau
-let g:airline_powerline_fonts = 1
-if filereadable(expand("~/.vimrc_background"))
-  let base16colorspace=256
-  source ~/.vimrc_background
-endif
+"formatting
+noremap == :Autoformat<CR>
+noremap -= ::AutoformatLine <CR>
 
 "toggle nerdtree
 map <leader>n :NERDTreeToggle<CR>
+let NERDTreeShowHidden=1
+let g:netrw_liststyle=3
+
+"visuals
+let base16colorspace=256
+
+let g:airline_powerline_fonts = 1
+let g:airline_theme='luna'
+let g:airline_skip_empty_sections = 1
+"let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#syntastic#enabled = 1
+let g:airline_highlighting_cache = 0
+let g:airline#extensions#tmuxline#enabled = 1
+let airline#extensions#tmuxline#color_template = 'normal'
+let g:airline#extensions#ale#enabled = 1
 
 "save and quit
 map <leader>s :w<CR>
 map <leader>q :q<CR>
+
+"start fuzzy finder
+command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, <bang>0)
+
+map <leader>f :Files<CR>
+
+"source vim file
+nnoremap <leader>sv :source $MYVIMRC<cr>
+
+let g:ale_set_highlights = 0
+
+"buffer stuff
+nnoremap <leader>e :Buffers <CR>
+
+command! Buffers call fzf#run(fzf#wrap(
+      \ {'source': map(range(1, bufnr('$')), 'bufname(v:val)')}))
+
+
+set clipboard=unnamed
+se mouse+=a
 
 "fzf and rg config
 " --column: Show column number
@@ -148,17 +156,15 @@ map <leader>q :q<CR>
 " --glob: Additional conditions for search (in this case ignore everything in
 "  the .git/ folder)
 " --color: Search color options
-command! -bang -nargs=* Find call fzf#vim#grep('rg --line-number --fixed-strings --ignore-case --color "always" '.shellescape(<q-args>), 0, <bang>0)
+"command! -bang -nargs=* Find call fzf#vim#grep('rg --line-number --hidden --fixed-strings --ignore-case --color "always" '.shellescape(<q-args>), 0, <bang>0)
 
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --type-add "liquid:*.liquid" --type-add "erb:*.erb" --column --line-number --no-heading --color=always --smart-case -- %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  "let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(), a:fullscreen)
+endfunction
 
-imap <c-x><c-l> <plug>(fzf-complete-line)
-" Better command history with q:
-command! CmdHist call fzf#vim#command_history()
-nnoremap <leader>fh :CmdHist<CR>
+command! -nargs=* -bang Find call RipgrepFzf(<q-args>, <bang>0)
 
-" Better search history
-command! FileHist call fzf#vim#history()
-nnoremap <leader>ff :FileHist<CR>
-
-"source vim file
-nnoremap <leader>sv :source $MYVIMRC<cr>
