@@ -14,6 +14,9 @@ setopt AUTO_CD
 
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/emmakotzer/.oh-my-zsh"
+if [ ! -d $ZSH ]; then
+    git clone https://github.com/robbyrussell/oh-my-zsh.git $ZSH
+fi
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -122,7 +125,9 @@ if [ -e /Users/emmakotzer/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/emm
 # cloudplatform: add Shopify clusters to your local kubernetes config
 export KUBECONFIG=${KUBECONFIG:+$KUBECONFIG:}/Users/emmakotzer/.kube/config:/Users/emmakotzer/.kube/config.shopify.cloudplatform
 # cloudplatform: add Shopify clusters to your local kubernetes config
-for file in /Users/emmakotzer/src/github.com/Shopify/cloudplatform/workflow-utils/*.bash; do source ${file}; done
+if [ ! $SPIN ]; then
+  for file in /Users/emmakotzer/src/github.com/Shopify/cloudplatform/workflow-utils/*.bash; do source ${file}; done
+fi
 kubectl-short-aliases
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/emmakotzer/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/emmakotzer/Downloads/google-cloud-sdk/path.zsh.inc'; fi
