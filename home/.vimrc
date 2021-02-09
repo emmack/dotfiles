@@ -51,8 +51,10 @@ Plug 'derekwyatt/vim-scala'
 Plug 'jremmen/vim-ripgrep'
 Plug 'leafgarland/typescript-vim'
 Plug 'janko/vim-test'
-Plug 'pgr0ss/vimux-ruby-test'
-
+Plug 'morhetz/gruvbox'
+Plug 'edkolev/tmuxline.vim'
+"Plug 'janx/vim-rubytest'
+Plug 'christoomey/vim-tmux-runner'
 
 call plug#end()
 
@@ -70,19 +72,22 @@ highlight LineNr guibg=NONE
 
 "testing config
 let test#strategy = "vimux"
-let g:vimux_ruby_cmd_unit_test = "dev test"
-let g:vimux_ruby_file_relative_paths = 1
-let g:vimux_ruby_cmd_all_tests = "dev test"
+"let g:test#runner_commands = ['Minitest']
+"let test#ruby#bundle_exec = 0
+
+"let test#ruby#minitest#executable = 'dev test'
 
 "testing commands
-nmap <leader>T :RunRubyFocusedTest<CR>
-nmap <leader>t :RunAllRubyTests<CR>
+nmap <leader>T :TestNearest<CR>
+nmap <leader>t :TestFile<CR>
 nmap <leader>tt :TestLast<CR>
 map <Leader>qq :VimuxCloseRunner<CR>
 
 
 "open a console pan
 map <Leader>d :VimuxPromptCommand("")<CR><CR>
+"map <Leader>t :VimuxPromptCommand("dev test" getcwd())<CR><CR>
+"map <Leader>rb :call VimuxRunCommand("clear; dev test " . bufname("%"))<CR>
 
 "key word search
 nnoremap <leader>a :Find
@@ -108,17 +113,20 @@ let NERDTreeShowHidden=1
 let g:netrw_liststyle=3
 
 "visuals
+autocmd vimenter * ++nested colorscheme gruvbox
 let base16colorspace=256
 
 let g:airline_powerline_fonts = 1
+
 let g:airline_theme='luna'
 let g:airline_skip_empty_sections = 1
-"let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline_highlighting_cache = 0
 let g:airline#extensions#tmuxline#enabled = 1
 let airline#extensions#tmuxline#color_template = 'normal'
 let g:airline#extensions#ale#enabled = 1
+let g:airline#extensions#tabline#enabled = 0
 
 "save and quit
 map <leader>s :w<CR>
@@ -128,6 +136,7 @@ map <leader>q :q<CR>
 command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, <bang>0)
 
 map <leader>f :Files<CR>
+nnoremap <leader>v :GFiles?<CR>
 
 "source vim file
 nnoremap <leader>sv :source $MYVIMRC<cr>
@@ -137,8 +146,8 @@ let g:ale_set_highlights = 0
 "buffer stuff
 nnoremap <leader>e :Buffers <CR>
 
-command! Buffers call fzf#run(fzf#wrap(
-      \ {'source': map(range(1, bufnr('$')), 'bufname(v:val)')}))
+"command! Buffers call fzf#run(fzf#wrap(
+"      \ {'source': map(range(1, bufnr('$')), 'bufname(v:val)')}))
 
 
 set clipboard=unnamed
@@ -161,10 +170,14 @@ se mouse+=a
 function! RipgrepFzf(query, fullscreen)
   let command_fmt = 'rg --type-add "liquid:*.liquid" --type-add "erb:*.erb" --column --line-number --no-heading --color=always --smart-case -- %s || true'
   let initial_command = printf(command_fmt, shellescape(a:query))
-  let reload_command = printf(command_fmt, '{q}')
+  "let reload_command = printf(command_fmt, '{q}')
   "let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
   call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(), a:fullscreen)
 endfunction
 
 command! -nargs=* -bang Find call RipgrepFzf(<q-args>, <bang>0)
+
+
+let $RUBYHOME=$HOME."/.rbenv/versions/2.6.5"
+set rubydll=$HOME/.rbenv/versions/2.6.5/lib/libruby.2.6.5.dylib
 

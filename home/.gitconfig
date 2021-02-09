@@ -11,7 +11,8 @@
   tool = vimdiff
 [core]
   editor = /usr/bin/vim
-  excludesfile = ~/.gitignore
+	excludesfile = /Users/emmakotzer/.gitignore_global
+	commitGraph = true
 [interactive]
   singlekey = true
 [push]
@@ -21,8 +22,6 @@
   rebase = true
 [hub]
   protocol = ssh
-[credential]
-  helper = osxkeychain
 [init]
   templatedir = ~/.git_template
 [filter "media"]
@@ -34,3 +33,23 @@
 	required = true
 [branch]
 	autosetuprebase = always
+[diff]
+	algorithm = patience
+[gc]
+	writeCommitGraph = true
+[protocol]
+	version = 2
+[credential]
+	helper = 
+	helper = store --file /opt/dev/var/private/git_credential_store
+[url "https://github.com/Shopify/"]
+	insteadOf = git@github.com:Shopify/
+	insteadOf = git@github.com:shopify/
+	insteadOf = ssh://git@github.com/Shopify/
+	insteadOf = ssh://git@github.com/shopify/
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
