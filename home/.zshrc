@@ -126,8 +126,10 @@ if [ -e /Users/emmakotzer/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/emm
 # cloudplatform: add Shopify clusters to your local kubernetes config
 export KUBECONFIG=${KUBECONFIG:+$KUBECONFIG:}/Users/emmakotzer/.kube/config:/Users/emmakotzer/.kube/config.shopify.cloudplatform
 # cloudplatform: add Shopify clusters to your local kubernetes config
-for file in /Users/emmakotzer/src/github.com/Shopify/cloudplatform/workflow-utils/*.bash; do source ${file}; done
-kubectl-short-aliases
+if [ ! $SPIN ]; then
+  for file in /Users/emmakotzer/src/github.com/Shopify/cloudplatform/workflow-utils/*.bash; do source ${file}; done
+  kubectl-short-aliases
+fi
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/emmakotzer/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/emmakotzer/Downloads/google-cloud-sdk/path.zsh.inc'; fi
 # The next line enables shell command completion for gcloud.
