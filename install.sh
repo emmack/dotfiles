@@ -27,3 +27,9 @@ for file in home/.[^.]*; do
     symlink $path $target
   fi
 done
+
+tmux source-file ~/.tmux.conf
+
+if ! command -v rg &> /dev/null; then
+  sudo apt-get install -y ripgrep
+fi
