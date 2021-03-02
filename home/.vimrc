@@ -120,7 +120,12 @@ let NERDTreeShowHidden=1
 let g:netrw_liststyle=3
 
 "visuals
-autocmd vimenter * ++nested colorscheme gruvbox
+"autocmd vimenter * ++nested
+colorscheme gruvbox
+set background=dark
+let g:gruvbox_termcolors=256
+syntax on
+
 let base16colorspace=256
 
 let g:airline_powerline_fonts = 1
