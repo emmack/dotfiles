@@ -5,6 +5,8 @@ if empty(glob('~/.vim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall | source $MYVIMRC
 endif
 
+autocmd VimEnter * PlugInstall | source $MYVIMRC
+
 let mapleader = " "
 
 set encoding=utf-8

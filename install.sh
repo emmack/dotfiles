@@ -28,8 +28,17 @@ for file in home/.[^.]*; do
   fi
 done
 
+# source tmux
 tmux source-file ~/.tmux.conf
 
+# install ripgrep
 if ! command -v rg &> /dev/null; then
   sudo apt-get install -y ripgrep
 fi
+
+
+# install vim plugins
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+vim +PlugInstall +qall
