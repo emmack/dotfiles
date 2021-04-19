@@ -6,6 +6,13 @@ function symlink {
   ln -nsf $1 $2
 }
 
+install_vim_dependencies() {
+  if ! ls -A "$HOME/.vim/plugged" &> /dev/null; then
+    step "Installing vim dependencies"
+    vim +PlugInstall +qall
+  fi
+}
+
 for file in home/.[^.]*; do
   path="$(pwd)/$file"
   base=$(basename $file)
@@ -36,9 +43,4 @@ if ! command -v rg &> /dev/null; then
   sudo apt-get install -y ripgrep
 fi
 
-
-# install vim plugins
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-vim +PlugInstall +qall
+install_vim_dependencies
